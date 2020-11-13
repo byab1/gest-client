@@ -24,10 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  "pagination_items_per_page": 20,
  * "order": {"montant": "desc"}
  * },
- * normalizationContext={
- * "groups"={"factures_lecture"}
- * },
- * denormalizationContext={"disable_type_enforcement"=true}
+ * normalizationContext={"groups"={"factures_lecture"}},
+ * denormalizationContext={"disable_type_enforcement"= true}
  * )
  * @ApiFilter(OrderFilter::class, properties={"montant", "envoyeLe"})
  */
@@ -112,7 +110,7 @@ class Facture
         return $this->envoyeLe;
     }
 
-    public function setEnvoyeLe($envoyeLe): self
+    public function setEnvoyeLe(\DateTime $envoyeLe): self
     {
         $this->envoyeLe = $envoyeLe;
 

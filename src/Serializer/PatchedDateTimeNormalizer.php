@@ -11,6 +11,7 @@
 
 namespace App\Serializer;
 
+use DateTimeInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
@@ -103,6 +104,7 @@ class PatchedDateTimeNormalizer implements NormalizerInterface, DenormalizerInte
         try {
             return \DateTime::class === $type ? new \DateTime($data, $timezone) : new \DateTimeImmutable($data, $timezone);
         } catch (\Exception $e) {
+
             if ($context['disable_type_enforcement'] ?? false) {
                 return $data;
             }
