@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
 import ClientsApi from '../services/clientsApi';
+import {Link} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import TableLoader from '../components/loader/TableLoader';
 
 const ClientPage = (props) => {
 
     const [clients, setClients]= useState([]); 
     const [currentPage, setCurrentPage]= useState(1); 
     const [search, setSearch]= useState(""); 
+    const [loading, setLoading]= useState(true); 
 
     //permet de recuperer les clients
    const fetchClients = async () => {
         try {
           const data = await ClientsApi.findAll();
            setClients(data);
+           setLoading(false);
        } catch (error){
-           console.log(error.response);
+           toast.error("Impossible de charger les clients");
        }
    }
 //Rechercher les clients au chargement du component
@@ -44,6 +49,7 @@ const ClientPage = (props) => {
                setClients(clientOriginal);
                console.log(error.response);
            } );
+           toast.success("Le client a bien été supprimé")
                 
     };
 
@@ -77,9 +83,14 @@ const ClientPage = (props) => {
 
 
     return (  
-
     <>
+    <div className="mb-3 d-flex justify-content-between align-items-center">
     <h1>Liste des clients</h1>
+    <Link to="/clients/create" className="btn btn-primary">
+        Créer un client
+    </Link>
+
+    </div>
 
     <div className="form-group">
         <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..."/>
@@ -97,11 +108,11 @@ const ClientPage = (props) => {
             <th className="text-center">Action</th>
         </tr>
     </thead>
-    <tbody>
+    { !loading && ( <tbody>
         {paginatedClients.map(client => (
         <tr key={client.id}>
                 <td>{client.id}</td>
-                <td><a href="#">{client.nom} {client.prenom}</a></td>
+                <td><Link to={"/clients/" + client.id}>{client.nom} {client.prenom}</Link></td>
                 <td>{client.email}</td>
                 <td>{client.entreprise}</td>
                 <td className="text-center">
@@ -109,7 +120,7 @@ const ClientPage = (props) => {
                 </td>
                 <td className="text-center">{client.totalMontant.toLocaleString()} $</td>
                 <td className="text-center">
-                    <a className='btn btn-info btn-xs mr-1' href="#"><span className="glyphicon glyphicon-edit"></span> Edit</a> 
+                    <Link to={"/clients/" + client.id} className='btn btn-primary btn-xs mr-1'><span className="glyphicon glyphicon-edit"></span> Edit</Link>
                     <button
                         onClick={()=> handleDelete(client.id)}  
                         className="btn btn-danger btn-xs" 
@@ -121,7 +132,10 @@ const ClientPage = (props) => {
         ))}
             
     </tbody>
+    )}
     </table>
+
+    {loading && <TableLoader/>}
 
 {itemsPerPage < filteredClients.length && <Pagination 
 currentPage={currentPage} 

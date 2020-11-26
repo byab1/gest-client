@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import AuthApi from '../services/authApi';
 import { NavLink } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext'
+import { toast } from 'react-toastify';
 
 const Navbar = ({ history }) => {
 
@@ -9,6 +10,7 @@ const Navbar = ({ history }) => {
 
     const handleLogout = () => {
         AuthApi.logout();
+        toast.info("Vous êtes désormais déconnecté !");
         setIsAuthenticated(false);
         history.push("/login");
     }
@@ -22,7 +24,7 @@ const Navbar = ({ history }) => {
             <div className="collapse navbar-collapse" id="navbarColor03">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/clients">Cliens</NavLink>
+                        <NavLink className="nav-link" to="/clients">Clients</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/factures">Factures</NavLink>
