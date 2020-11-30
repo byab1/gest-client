@@ -1,3 +1,6 @@
+//Permet de lire le fichier .env et d'extraire les infos sous la forme d'un objet
+require ("dotenv").config();
+
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -70,5 +73,10 @@ Encore
     .enableReactPreset()
     //.addEntry('admin', './assets/admin.js')
     ;
+
+    //Ce code nous permet de donner des options à la config de Webpack
+    Encore.configureDefinePlugin(options => {
+        options["process.env"].API_URL = process.env.API_URL;
+    })
 
 module.exports = Encore.getWebpackConfig();
